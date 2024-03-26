@@ -1,0 +1,23 @@
+---
+version: "3.7"
+
+services:
+  mariadb-tmpfs:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: "password"
+      MARIADB_DATABASE: "database"
+    ports:
+      - "3306:3306"
+    tmpfs:
+      - /var/lib/mysql
+
+  php-runner:
+    build:
+      dockerfile: Dockerfile
+      target: php-dev
+    environment:
+      DB_HOST: "mariadb-tmpfs"
+    volumes:
+      - ./:/src/
